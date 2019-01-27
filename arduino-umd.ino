@@ -51,24 +51,21 @@ void setup() {
 }
 
 void loop() {
-   if(!timeClient.update() && WiFi.status() == WL_CONNECTED) {
+   if(!timeClient.update()) {
       timeClient.forceUpdate();
-
-      epochTime = timeClient.getEpochTime();
-      ti = localtime (&epochTime);
-
-      yearStr = String(ti->tm_year + 1900);
-      monthStr = lessThan10(ti->tm_mon + 1);
-      dayStr = lessThan10(ti->tm_mday);
-      hourStr = lessThan10(ti->tm_hour);
-      minuteStr = lessThan10(ti->tm_min);
-      secondStr = lessThan10(ti->tm_sec);
-
-      Serial.print(yearStr + "." + monthStr + "." + dayStr + ". ");
-      Serial.println(hourStr + ":" + minuteStr + ":" + secondStr);
-   } else {
-      Serial.println("disconnected");
    }
+   epochTime = timeClient.getEpochTime();
+   ti = localtime (&epochTime);
+
+   yearStr = String(ti->tm_year + 1900);
+   monthStr = lessThan10(ti->tm_mon + 1);
+   dayStr = lessThan10(ti->tm_mday);
+   hourStr = lessThan10(ti->tm_hour);
+   minuteStr = lessThan10(ti->tm_min);
+   secondStr = lessThan10(ti->tm_sec);
+
+   Serial.print(yearStr + "." + monthStr + "." + dayStr + ". ");
+   Serial.println(hourStr + ":" + minuteStr + ":" + secondStr);
    delay(1000);
 }
 
