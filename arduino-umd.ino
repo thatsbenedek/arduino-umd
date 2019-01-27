@@ -19,32 +19,34 @@ String hourStr;
 String minuteStr;
 String secondStr;
 int DOW;
+String UMDclock;
 
 void setup() {
    Serial.begin(9600);
 
    WiFi.begin(ssid, password);
    while (WiFi.status() != WL_CONNECTED) {
-      Serial.println("connecting");
+      Serial.print("%0Dconnecting%Z");
       delay(250);
       if (WiFi.status() != WL_CONNECTED) {
-         Serial.println("connecting.");
+         Serial.print("%0Dconnecting.%Z");
          delay(250);
       }
       if (WiFi.status() != WL_CONNECTED) {
-         Serial.println("connecting..");
+         Serial.print("%0Dconnecting..%Z");
          delay(250);
       }
       if (WiFi.status() != WL_CONNECTED) {
-         Serial.println("connecting...");
+         Serial.print("%0Dconnecting...%Z");
          delay(250);
       }
    }
-   Serial.println("connected successfully");
-   delay(1000);
+   Serial.print("%0Dconnected successfully%Z");
+   delay(3000);
 
-   Serial.print("IP: ");
-   Serial.println(WiFi.localIP());
+   Serial.print("%0DIP: ");
+   Serial.print(WiFi.localIP());
+   Serial.print("%Z");
    delay(3000);
 
    timeClient.begin();
@@ -66,9 +68,10 @@ void loop() {
    minuteStr = lessThan10(ti->tm_min);
    secondStr = lessThan10(ti->tm_sec);
 
-   Serial.print(yearStr + "." + monthStr + "." + dayStr + ". ");
-   Serial.print(dayOfWeek(DOW) + " ");
-   Serial.println(hourStr + ":" + minuteStr + ":" + secondStr);
+   UMDclock = (yearStr + "." + monthStr + "." + dayStr + ".     " + dayOfWeek(DOW) + "      " + hourStr + ":" + minuteStr + ":" + secondStr);
+   UMDclock.replace('1', 0x7E);
+   UMDclock.replace('I', 0x7F);
+   Serial.print("%0D" + UMDclock + "%Z");
    delay(1000);
 }
 
