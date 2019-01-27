@@ -18,6 +18,7 @@ String dayStr;
 String hourStr;
 String minuteStr;
 String secondStr;
+int DOW;
 
 void setup() {
    Serial.begin(9600);
@@ -55,6 +56,7 @@ void loop() {
       timeClient.forceUpdate();
    }
    epochTime = timeClient.getEpochTime();
+   DOW = timeClient.getDay();
    ti = localtime (&epochTime);
 
    yearStr = String(ti->tm_year + 1900);
@@ -65,6 +67,7 @@ void loop() {
    secondStr = lessThan10(ti->tm_sec);
 
    Serial.print(yearStr + "." + monthStr + "." + dayStr + ". ");
+   Serial.print(dayOfWeek(DOW) + " ");
    Serial.println(hourStr + ":" + minuteStr + ":" + secondStr);
    delay(1000);
 }
@@ -74,5 +77,17 @@ String lessThan10(int number) {
       return ("0" + String(number));
    } else {
       return String(number);
+   }
+}
+
+String dayOfWeek(int number) {
+   switch (number) {
+      case 0: return "SUN";
+      case 1: return "MON";
+      case 2: return "TUE";
+      case 3: return "WED";
+      case 4: return "THU";
+      case 5: return "FRI";
+      case 6: return "SAT";
    }
 }
