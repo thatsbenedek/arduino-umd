@@ -10,8 +10,8 @@ UMD-s are capable of displaying a limited set of characters. They use a special 
 
 **%[address of UMD]D** + **string to display** + **%Z**
 
-opening section: containing the address of the UMD
-middle section: actual text to displaying
-closing section: indicating end of the data sent
+* opening section: containing the address of the UMD
+* middle section: actual text to displaying
+* closing section: indicating end of the data sent
 
 For example the "%0Dtext%Z" string will display "string" on the UMD.
