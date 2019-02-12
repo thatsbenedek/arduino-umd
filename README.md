@@ -8,7 +8,7 @@ The UMD uses RS485 for receiving data, the microcontroller has TTL serial levels
 
 UMD-s are capable of displaying a limited set of characters. They use a special protocol to display text data correctly, this is Harris Protocol, which has the following elements:
 
-%[address of UMD]D + string to display + %Z
+**%**[address of UMD]**D** + **string to display** + **%Z**
 
 opening section: containing the address of the UMD
 middle section: actual text to displaying
