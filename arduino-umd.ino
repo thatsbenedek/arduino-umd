@@ -3,9 +3,9 @@
 #include <WiFiUdp.h>
 #include <time.h>
 
-const char* ssid = "";
-const char* password = "";
-int GMToffset = 1;
+const char* ssid = ""; //SSID of the network to be connected to
+const char* password = ""; //password of the network to be connected to
+int GMToffset = 1; //GMT offset
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
@@ -25,7 +25,7 @@ void setup() {
    Serial.begin(9600);
 
    WiFi.begin(ssid, password);
-   while (WiFi.status() != WL_CONNECTED) {
+   while (WiFi.status() != WL_CONNECTED) { //displaying connection messages
       Serial.print("%0Dconnecting%Z");
       delay(250);
       if (WiFi.status() != WL_CONNECTED) {
@@ -44,21 +44,21 @@ void setup() {
    Serial.print("%0Dconnected successfully%Z");
    delay(3000);
 
-   Serial.print("%0DIP: ");
+   Serial.print("%0DIP: "); //displaying IP address
    Serial.print(WiFi.localIP());
    Serial.print("%Z");
    delay(3000);
 
    timeClient.begin();
-   timeClient.setTimeOffset(GMToffset * 3600);
+   timeClient.setTimeOffset(GMToffset * 3600); //setting GMT offset using the previously provided value
 }
 
 void loop() {
-   if(!timeClient.update()) {
+   if(!timeClient.update()) { //updating time using NTP
       timeClient.forceUpdate();
    }
-   epochTime = timeClient.getEpochTime();
-   DOW = timeClient.getDay();
+   epochTime = timeClient.getEpochTime(); //getting epoch time for displaying the date
+   DOW = timeClient.getDay(); //getting day of week
    ti = localtime (&epochTime);
 
    yearStr = String(ti->tm_year + 1900);
@@ -69,13 +69,13 @@ void loop() {
    secondStr = lessThan10(ti->tm_sec);
 
    UMDclock = (yearStr + "." + monthStr + "." + dayStr + ".     " + dayOfWeek(DOW) + "      " + hourStr + ":" + minuteStr + ":" + secondStr);
-   UMDclock.replace('1', 0x7E);
+   UMDclock.replace('1', 0x7E); //replacing regular 1's and I's with fixed width characters
    UMDclock.replace('I', 0x7F);
    Serial.print("%0D" + UMDclock + "%Z");
    delay(1000);
 }
 
-String lessThan10(int number) {
+String lessThan10(int number) { //formatting single digit numbers with a leading zero
    if (number < 10) {
       return ("0" + String(number));
    } else {
@@ -83,7 +83,7 @@ String lessThan10(int number) {
    }
 }
 
-String dayOfWeek(int number) {
+String dayOfWeek(int number) { //getting desired DOW string from integer data
    switch (number) {
       case 0: return "SUN";
       case 1: return "MON";
