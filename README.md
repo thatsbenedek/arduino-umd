@@ -2,7 +2,7 @@
 
 Making a broadcast UMD (Under Monitor Display) more useful in everyday life using a WiFi capable microcontroller (NodeMCU 1.0).
 
-The UMD uses RS485 for receiving data, the microcontroller has TTL serial levels. To convert TTL levels to RS485 (as the UMD only receives data) you'll need a level adapter IC (such as the SN75176).
+The UMD uses RS485 for receiving data but the microcontroller has TTL serial levels. To convert TTL to RS485 you'll need a bus transciever IC (such as the SN75176).
 
 ## Harris protocol
 

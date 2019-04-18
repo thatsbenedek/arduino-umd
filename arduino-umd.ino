@@ -3,9 +3,14 @@
 #include <WiFiUdp.h>
 #include <time.h>
 
-const char* ssid = ""; //SSID of the network to be connected to
-const char* password = ""; //password of the network to be connected to
-int GMToffset = 1; //GMT offset
+//SSID of the network to be connected to
+const char* ssid = "";
+
+//password of the network to be connected to
+const char* password = "";
+
+//GMT offset
+int GMToffset = 1;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
@@ -23,9 +28,10 @@ String UMDclock;
 
 void setup() {
    Serial.begin(9600);
-
    WiFi.begin(ssid, password);
-   while (WiFi.status() != WL_CONNECTED) { //displaying connection messages
+
+   //displaying connection messages
+   while (WiFi.status() != WL_CONNECTED) {
       Serial.print("%0Dconnecting%Z");
       delay(250);
       if (WiFi.status() != WL_CONNECTED) {
@@ -44,21 +50,29 @@ void setup() {
    Serial.print("%0Dconnected successfully%Z");
    delay(3000);
 
-   Serial.print("%0DIP: "); //displaying IP address
+   //displaying IP address
+   Serial.print("%0DIP: ");
    Serial.print(WiFi.localIP());
    Serial.print("%Z");
    delay(3000);
 
    timeClient.begin();
-   timeClient.setTimeOffset(GMToffset * 3600); //setting GMT offset using the previously provided value
+
+   //setting GMT offset using the previously provided value
+   timeClient.setTimeOffset(GMToffset * 3600);
 }
 
 void loop() {
-   if(!timeClient.update()) { //updating time using NTP
+   //updating time using NTP
+   if(!timeClient.update()) {
       timeClient.forceUpdate();
    }
-   epochTime = timeClient.getEpochTime(); //getting epoch time for displaying the date
-   DOW = timeClient.getDay(); //getting day of week
+
+   //getting epoch time for displaying the date
+   epochTime = timeClient.getEpochTime();
+   
+   //getting day of week
+   DOW = timeClient.getDay();
    ti = localtime (&epochTime);
 
    yearStr = String(ti->tm_year + 1900);
@@ -69,13 +83,16 @@ void loop() {
    secondStr = lessThan10(ti->tm_sec);
 
    UMDclock = (yearStr + "." + monthStr + "." + dayStr + ".     " + dayOfWeek(DOW) + "      " + hourStr + ":" + minuteStr + ":" + secondStr);
-   UMDclock.replace('1', 0x7E); //replacing regular 1's and I's with fixed width characters
+   
+   //replacing regular 1's and I's with fixed width characters
+   UMDclock.replace('1', 0x7E);
    UMDclock.replace('I', 0x7F);
    Serial.print("%0D" + UMDclock + "%Z");
    delay(1000);
 }
 
-String lessThan10(int number) { //formatting single digit numbers with a leading zero
+//formatting single digit numbers with a leading zero
+String lessThan10(int number) {
    if (number < 10) {
       return ("0" + String(number));
    } else {
@@ -83,7 +100,8 @@ String lessThan10(int number) { //formatting single digit numbers with a leading
    }
 }
 
-String dayOfWeek(int number) { //getting desired DOW string from integer data
+//getting desired DOW string from integer data
+String dayOfWeek(int number) {
    switch (number) {
       case 0: return "SUN";
       case 1: return "MON";
