@@ -27,13 +27,12 @@ String hourStr;
 String minuteStr;
 String secondStr;
 int DOW;
-String UMDclock;
 
 void setup() {
    Serial.begin(9600);
    WiFi.begin(ssid, password);
 
-   //displaying connection messages
+   //displaying connection status messages
    while (WiFi.status() != WL_CONNECTED) {
       Serial.print(UMDify("connecting"));
       delay(250);
@@ -51,12 +50,6 @@ void setup() {
       }
    }
    Serial.print(UMDify("connected successfully"));
-   delay(3000);
-
-   //displaying IP address
-   Serial.print("%" + String(UMDaddress) + "D" + "IP: ");
-   Serial.print(WiFi.localIP());
-   Serial.print("%Z");
    delay(3000);
 
    timeClient.begin();
@@ -85,12 +78,7 @@ void loop() {
    minuteStr = lessThan10(ti->tm_min);
    secondStr = lessThan10(ti->tm_sec);
 
-   UMDclock = (yearStr + "." + monthStr + "." + dayStr + ".     " + dayOfWeek(DOW) + "      " + hourStr + ":" + minuteStr + ":" + secondStr);
-   
-   //replacing regular 1's and I's with fixed width characters
-   UMDclock.replace('1', 0x7E);
-   UMDclock.replace('I', 0x7F);
-   Serial.print(UMDify(UMDclock));
+   Serial.print(UMDify(yearStr + "." + monthStr + "." + dayStr + ".     " + dayOfWeek(DOW) + "      " + hourStr + ":" + minuteStr + ":" + secondStr));
    delay(1000);
 }
 
@@ -118,6 +106,8 @@ String dayOfWeek(int number) {
 
 //creating an UMD display string
 String UMDify(String strparam) {
+   strparam.replace('1', 0x7E);
+   strparam.replace('I', 0x7F);
    return ("%" + String(UMDaddress) + "D" + strparam + "%Z");
 }
 
