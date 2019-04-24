@@ -10,7 +10,10 @@ const char* ssid = "";
 const char* password = "";
 
 //GMT offset
-int GMToffset = 1;
+int GMToffset = 2;
+
+//UMD address
+int UMDaddress = 0;
 
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP);
@@ -32,33 +35,33 @@ void setup() {
 
    //displaying connection messages
    while (WiFi.status() != WL_CONNECTED) {
-      Serial.print("%0Dconnecting%Z");
+      Serial.print(UMDify("connecting"));
       delay(250);
       if (WiFi.status() != WL_CONNECTED) {
-         Serial.print("%0Dconnecting.%Z");
+         Serial.print(UMDify("connecting."));
          delay(250);
       }
       if (WiFi.status() != WL_CONNECTED) {
-         Serial.print("%0Dconnecting..%Z");
+         Serial.print(UMDify("connecting.."));
          delay(250);
       }
       if (WiFi.status() != WL_CONNECTED) {
-         Serial.print("%0Dconnecting...%Z");
+         Serial.print(UMDify("connecting..."));
          delay(250);
       }
    }
-   Serial.print("%0Dconnected successfully%Z");
+   Serial.print(UMDify("connected successfully"));
    delay(3000);
 
    //displaying IP address
-   Serial.print("%0DIP: ");
+   Serial.print("%" + String(UMDaddress) + "D" + "IP: ");
    Serial.print(WiFi.localIP());
    Serial.print("%Z");
    delay(3000);
 
    timeClient.begin();
 
-   //setting GMT offset using the previously provided value
+   //setting GMT offset
    timeClient.setTimeOffset(GMToffset * 3600);
 }
 
@@ -87,7 +90,7 @@ void loop() {
    //replacing regular 1's and I's with fixed width characters
    UMDclock.replace('1', 0x7E);
    UMDclock.replace('I', 0x7F);
-   Serial.print("%0D" + UMDclock + "%Z");
+   Serial.print(UMDify(UMDclock));
    delay(1000);
 }
 
@@ -112,3 +115,9 @@ String dayOfWeek(int number) {
       case 6: return "SAT";
    }
 }
+
+//creating an UMD display string
+String UMDify(String strparam) {
+   return ("%" + String(UMDaddress) + "D" + strparam + "%Z");
+}
+
